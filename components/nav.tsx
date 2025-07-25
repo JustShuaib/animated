@@ -80,20 +80,77 @@ const Nav = () => {
           duration: 0.4,
           ease: "power1.in",
         })
-        .to(".nav-control", {
-          text: "close",
-          rtl: true,
-          duration: 0.6,
-        })
-        .to(".nav-container ul li", {
-          stagger: 0.3,
-          autoAlpha: 1,
-          xPercent: 0,
-          ease: "power1.out",
-        });
+        .to(
+          ".nav-control",
+          {
+            text: "close",
+            rtl: true,
+            duration: 0.6,
+            color: "white", // Ensure text color is white
+          },
+          "<"
+        )
+        .to(
+          ".nav-container ul li",
+          {
+            stagger: 0.1,
+            autoAlpha: 1,
+            xPercent: 0,
+            duration: 0.4, // Added explicit duration
+            ease: "power1.out",
+          },
+          "-=0.2"
+        ); // Start slightly before the previous animation ends
     }
     setOpen((value) => !value);
   });
+  // const handleBtn = contextSafe(() => {
+  //   const navTl = gsap.timeline();
+  //   if (open) {
+  //     document.body.style.overflowY = "auto";
+  //     navTl
+  //       .to(".nav-container", {
+  //         yPercent: -100,
+  //         duration: 0.6,
+  //         ease: "power1.out",
+  //         onComplete: () => {
+  //           gsap.set(".nav-container", {
+  //             yPercent: 100,
+  //           });
+  //           gsap.set(".nav-container ul li", {autoAlpha: 0, xPercent: 20});
+  //         },
+  //       })
+  //       .to(
+  //         ".nav-control",
+  //         {
+  //           text: "menu",
+  //           rtl: true,
+  //           duration: 0.6,
+  //         },
+  //         "<"
+  //       );
+  //   } else {
+  //     document.body.style.overflowY = "hidden";
+  //     navTl
+  //       .to(".nav-container", {
+  //         yPercent: 0,
+  //         duration: 0.4,
+  //         ease: "power1.in",
+  //       })
+  //       .to(".nav-control", {
+  //         text: "close",
+  //         rtl: true,
+  //         duration: 0.6,
+  //       })
+  //       .to(".nav-container ul li", {
+  //         stagger: 0.3,
+  //         autoAlpha: 1,
+  //         xPercent: 0,
+  //         ease: "power1.out",
+  //       });
+  //   }
+  //   setOpen((value) => !value);
+  // });
 
   return (
     <nav>
@@ -108,7 +165,7 @@ const Nav = () => {
         </button>
       </div>
       <div className="nav-container bg-black font-rubik-dirt z-10 text-8xl text-right px-36 uppercase fixed left-0 top-0 w-full h-dvh">
-        <ul className="flex flex-col justify-center gap-y-5 h-full">
+        <ul className="flex text-white flex-col justify-center gap-y-5 h-full">
           <li>
             <NavLink to="/">Home</NavLink>
           </li>
