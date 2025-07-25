@@ -6,12 +6,18 @@ import {
   Scripts,
   ScrollRestoration,
 } from "react-router";
-
-import type { Route } from "./+types/root";
+import type {Route} from "./+types/root";
+import {gsap} from "gsap";
+import {useGSAP} from "@gsap/react";
 import "./app.css";
+// import Nav from "components/nav";
+import {Observer} from "gsap/dist/Observer";
+import Nav from "components/nav";
+
+gsap.registerPlugin(useGSAP, Observer);
 
 export const links: Route.LinksFunction = () => [
-  { rel: "preconnect", href: "https://fonts.googleapis.com" },
+  {rel: "preconnect", href: "https://fonts.googleapis.com"},
   {
     rel: "preconnect",
     href: "https://fonts.gstatic.com",
@@ -19,11 +25,29 @@ export const links: Route.LinksFunction = () => [
   },
   {
     rel: "stylesheet",
-    href: "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap",
+    href: "https://fonts.googleapis.com/css2?family=Cinzel:wght@400..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Rubik+Dirt&display=swap",
   },
 ];
 
-export function Layout({ children }: { children: React.ReactNode }) {
+export function Layout({children}: {children: React.ReactNode}) {
+  useGSAP(() => {
+    let xTo, yTo;
+    gsap.set(".mouse-circle", {xPercent: -50, yPercent: -50});
+    xTo = gsap.quickTo(".mouse-circle", "x", {
+      duration: 0.5,
+      ease: "power3",
+    });
+    yTo = gsap.quickTo(".mouse-circle", "y", {
+      duration: 0.5,
+      ease: "power3",
+    });
+    const handleMouseMove = (e: MouseEvent) => {
+      xTo(e.clientX);
+      yTo(e.clientY);
+    };
+    window.addEventListener("mousemove", handleMouseMove);
+  });
+
   return (
     <html lang="en">
       <head>
@@ -33,6 +57,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
+        <div className="mouse-circle w-2.5 h-2.5 bg-gray-400 rounded-full pointer-events-none relative z-30" />
+        <Nav />
         {children}
         <ScrollRestoration />
         <Scripts />
@@ -45,7 +71,7 @@ export default function App() {
   return <Outlet />;
 }
 
-export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
+export function ErrorBoundary({error}: Route.ErrorBoundaryProps) {
   let message = "Oops!";
   let details = "An unexpected error occurred.";
   let stack: string | undefined;
